@@ -8,6 +8,9 @@ import Register from "../pages/Auth/Register/Register";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Rider from "../pages/Rider/Rider";
 import ForgotPassword from "../pages/Auth/ForgotPassword/ForgotPassword";
+import SendParcel from "../pages/SendParcel/SendParcel";
+import DashboardLayout from "../layouts/DashboardLayout";
+import MyParcel from "../pages/Dashboard/MyParcel/MyParcel";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +22,7 @@ export const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "/rider",
+        path: "rider",
         element: (
           <PrivateRoute>
             <Rider></Rider>
@@ -27,7 +30,17 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/coverage",
+        path: "send-parcel",
+        element: (
+          <PrivateRoute>
+            <SendParcel></SendParcel>
+          </PrivateRoute>
+        ),
+        loader: () =>
+          fetch("/data/serviceCenters.json").then((res) => res.json()),
+      },
+      {
+        path: "coverage",
         Component: Coverage,
         loader: () =>
           fetch("/data/serviceCenters.json").then((res) => res.json()),
@@ -39,17 +52,31 @@ export const router = createBrowserRouter([
     Component: AuthLayout,
     children: [
       {
-        path: "/login",
+        path: "login",
         Component: Login,
       },
       {
-        path: "/register",
+        path: "register",
         Component: Register,
       },
       {
-        path: "/forgot-password",
+        path: "forgot-password",
         Component: ForgotPassword,
       },
     ],
+  },
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: 'my-parcels',
+        Component: MyParcel
+      }
+    ]
   },
 ]);
